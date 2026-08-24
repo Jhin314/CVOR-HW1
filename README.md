@@ -1,0 +1,110 @@
+# Surgical Tool Detection — CV Surgical Applications, HW1
+
+Semi-supervised object detection for surgical tools (hands + instruments) from a
+small labeled image set (<100 images), generalized to an out-of-distribution (OOD)
+surgery video via pseudo-labeling with YOLO.
+
+**Classes:** `0 = Empty` (hand, no tool), `1 = Tweezers`, `2 = Needle_driver`.
+
+## Model weights
+
+Final model weights (stage 3): **[DOWNLOAD LINK HERE]**
+<!-- replace with a link to experiments/stage3/weights/best.pt (Google Drive / release asset) -->
+
+## Environment setup
+
+```bash
+# create/activate an environment (conda or venv), then:
+pip install -r requirements.txt
+```
+
+Note: `requirements.txt` pins `torch` for CUDA 12.8 (`+cu128`). If your CUDA differs,
+install a matching PyTorch build first (see https://pytorch.org), then the rest.
+
+## Data
+
+Expected on the server under `/datashare/HW1/`:
+
+```
+/datashare/HW1/
+  labeled_image_data/images/{train,val}    # labeled frames (YOLO format)
+  labeled_image_data/labels/{train,val}
+  id_video_data/                           # 2 in-distribution videos
+  ood_video_data/                          # 1 OOD video (surg_1.mp4)
+```
+
+Class names / paths are defined in `configs/data_stage{1,2,3}.yaml`.
+
+## Deliverable scripts
+
+**Run predictions on a single image** (YOLO-format output: `x_center y_center w h conf class`):
+```bash
+python scripts/predict.py --weights experiments/stage3/weights/best.pt \
+    --source path/to/image.jpg --out preds.txt --save
+```
+
+**Run predictions on a video** (OpenCV overlay, class-labeled boxes):
+```bash
+python scripts/video.py --weights experiments/stage3/weights/best.pt \
+    --source /datashare/HW1/ood_video_data/surg_1.mp4 \
+    --out ood_stage3.mp4 --conf 0.25
+```
+
+## Reproducing the full SSL pipeline
+
+The pipeline is two primitives — **train** (`train_model.py`) and **generate
+pseudo-labels** (`generate_psd_labels.py`) — with `build_dataset.py` combining
+labeled + pseudo data between stages. Run from the repo root:
+
+```bash
+# Stage 1: train initial model on labeled data
+python scripts/train_model.py --name stage1 --data configs/data_stage1.yaml \
+    --weights yolo11s.pt --epochs 150 --lr0 1e-3 --train-eval-data configs/data_stage1.yaml
+
+# Stage 2: pseudo-label the ID videos, then refine
+python scripts/generate_psd_labels.py --weights experiments/stage1/weights/best.pt \
+    --videos /datashare/HW1/id_video_data/*.mp4 --out pseudo_id \
+    --conf-track 0.35 --conf-keep 0.60 --min-track-len 8
+python scripts/build_dataset.py --labeled-yaml configs/data_stage1.yaml \
+    --pseudo-dir pseudo_id --labeled-repeat 5 --out-yaml data_stage2_combined.yaml
+python scripts/train_model.py --name stage2 --data data_stage2_combined.yaml \
+    --weights experiments/stage1/weights/best.pt --lr0 5e-4 --train-eval-data configs/data_stage2.yaml
+
+# Stage 3: repeat on the OOD video (generalization)
+python scripts/generate_psd_labels.py --weights experiments/stage2/weights/best.pt \
+    --videos /datashare/HW1/ood_video_data/surg_1.mp4 --out pseudo_ood \
+    --conf-track 0.25 --conf-keep 0.45 --min-track-len 5 --vid-stride 2 --imgsz 480 --half
+python scripts/build_dataset.py --labeled-yaml configs/data_stage1.yaml \
+    --pseudo-dir pseudo_ood --labeled-repeat 5 --out-yaml data_stage3_combined.yaml
+python scripts/train_model.py --name stage3 --data data_stage3_combined.yaml \
+    --weights experiments/stage2/weights/best.pt --lr0 5e-4 --train-eval-data configs/data_stage3.yaml
+```
+
+Each stage's outputs (weights, `results.csv`, `train_map.csv`) land in `experiments/<name>/`.
+
+## Pseudo-label heuristic
+
+Detections are turned into pseudo-labels only if they belong to a **track** (ByteTrack)
+that (a) persists at least `MIN_TRACK_LEN` frames and (b) has mean confidence ≥ `CONF_KEEP`.
+Each track's boxes are relabeled to the track's majority class (removing per-frame class
+flicker), and frames are subsampled by `STRIDE` to avoid near-duplicates.
+
+## Analysis / plotting
+
+```bash
+python ExploratoryDataAnalysis/EDA.py            # class dist, boxes/image, co-occurrence, spatial, ID-vs-OOD shift
+python scripts/plot_full_results.py              # per-stage train/val loss + mAP curves
+python scripts/plot_gt_vs_pred.py                # GT vs final-model predictions (val split)
+python scripts/plot_sample_grid.py               # labeled samples with GT boxes
+```
+
+## Repository layout
+
+```
+configs/                 data_stage{1,2,3}.yaml   (labeled dataset configs)
+scripts/                 train_model.py, generate_psd_labels.py, build_dataset.py,
+                         predict.py, video.py, custom_plots.py, plot_*.py
+ExploratoryDataAnalysis/ EDA.py
+requirements.txt
+run_full_experiment.sh   (runs the pipeline end to end)
+```
