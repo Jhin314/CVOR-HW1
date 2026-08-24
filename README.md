@@ -132,5 +132,7 @@ run_full_experiment.sh   (runs the pipeline end to end)
 ```
 
 ## Some figures
+![Training results stage 1](git_visualization/full_results_stage1.png)
+![Training results stage 2](git_visualization/full_results_stage2.png)
 ![Training results stage 3](git_visualization/full_results_stage3.png)
 ![GT vs predictions](git_visualization/gt_vs_pred.png)
