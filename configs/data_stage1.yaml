@@ -1,0 +1,8 @@
+# Adjust paths to match /datashare/HW1 layout (standard YOLO images/ + labels/ siblings)
+path: /datashare/HW1
+train: labeled_image_data/images/train
+val: labeled_image_data/images/val
+names:
+  0: Empty
+  1: Tweezers
+  2: Needle_driver

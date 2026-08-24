@@ -1,0 +1,37 @@
+# ── Trained runs / outputs (large, regenerable) ──────────────────────────
+experiments/
+runs/
+sweep_stage2/
+sweep_stage3/
+hyperparameter_tuning/sweep_stage*/
+
+# ── Pseudo-label sets (regenerable from videos) ──────────────────────────
+pseudo_id/
+pseudo_ood/
+
+# ── Generated dataset files (built by build_dataset.py) ──────────────────
+data_stage*_combined.yaml
+data_stage*_combined_train.txt
+train_stage*.txt
+
+# ── Model weights & media (large; commit best.pt manually if required) ───
+*.pt
+*.onnx
+*.mp4
+*.avi
+*.cache
+
+# ── Plots / figures output (regenerable) ─────────────────────────────────
+*.png
+eda_out/
+ExploratoryDataAnalysis/eda_out/
+loss_plots/
+
+# ── Python / env cruft ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+.DS_Store

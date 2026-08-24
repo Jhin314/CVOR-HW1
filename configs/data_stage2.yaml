@@ -1,0 +1,10 @@
+# Input data config (labeled set) for stage 2.
+# The pseudo script READS this to locate labeled images, then writes a separate
+# *combined* yaml. Never point train: at a .txt list here.
+path: /datashare/HW1
+train: labeled_image_data/images/train
+val: labeled_image_data/images/val
+names:
+  0: Empty
+  1: Tweezers
+  2: Needle_driver
