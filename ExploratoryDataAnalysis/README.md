@@ -8,7 +8,8 @@ the labeled image set and sampled video frames.
 From the repo root:
 
 ```bash
-python ExploratoryDataAnalysis/EDA.py
+cd ExploratoryDataAnalysis
+python EDA.py
 ```
 
 Figures are written to `ExploratoryDataAnalysis/eda_out/`, and summary numbers
