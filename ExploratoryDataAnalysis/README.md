@@ -46,4 +46,4 @@ at the top of `EDA.py` — edit there if your layout differs.
 ![Cooccurrence Matrix](../git_visualization/cooccurrence.png)
 ![Spatial Heatmap](../git_visualization/spatial_heatmap.png)
 ![ID-OOD-shift part 1](../git_visualization/id_ood_shift.png)
-![ID-OOD-shift part 2](../git_visualization/rgb_instensity_shift.png)
+![ID-OOD-shift part 2](../git_visualization/rgb_intensity_shift.png)
