@@ -8,7 +8,10 @@ surgery video via pseudo-labeling with YOLO.
 
 ## Model weights
 
-Final model weights (stage 3): **[DOWNLOAD LINK HERE]**
+For the final model weights (stage 3), please refer to this public Google Drive link containing the weights : **[[DOWNLOAD LINK HERE]](https://drive.google.com/file/d/1_idBa0yVFKYNtvzQvWP5OFsbGQlQUF_b/view?usp=sharing)**
+
+However, do note that some scripts requires that the weights lie in a directory of the form "experiments/stage3/weights/best.pt".
+For the reviewer's comfort, the weights have also been uploaded to this repository in the expected directory form.
 <!-- replace with a link to experiments/stage3/weights/best.pt (Google Drive / release asset) -->
 
 ## Environment setup
