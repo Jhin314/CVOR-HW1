@@ -130,3 +130,6 @@ ExploratoryDataAnalysis/ EDA.py
 requirements.txt
 run_full_experiment.sh   (runs the pipeline end to end)
 ```
+
+## Some figures
+![Training results stage 3](git_visualization/full_results_stage3.png)
