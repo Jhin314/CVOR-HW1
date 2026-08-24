@@ -52,9 +52,20 @@ python scripts/video.py --weights experiments/stage3/weights/best.pt \
 
 ## Reproducing the full SSL pipeline
 
-The pipeline is two primitives — **train** (`train_model.py`) and **generate
-pseudo-labels** (`generate_psd_labels.py`) — with `build_dataset.py` combining
-labeled + pseudo data between stages. Run from the repo root:
+The entire pipeline runs end to end with one script:
+
+```bash
+bash run_full_experiment.sh
+```
+
+It executes all four stages in order (train → pseudo-label ID → refine → pseudo-label
+OOD → refine), calling the two primitives — **train** (`train_model.py`) and **generate
+pseudo-labels** (`generate_psd_labels.py`) — with `build_dataset.py` combining labeled +
+pseudo data between stages. Each stage's outputs (weights, `results.csv`, `train_map.csv`)
+land in `experiments/<name>/`.
+
+<details>
+<summary>What the script runs (the individual stages)</summary>
 
 ```bash
 # Stage 1: train initial model on labeled data
@@ -80,7 +91,7 @@ python scripts/train_model.py --name stage3 --data data_stage3_combined.yaml \
     --weights experiments/stage2/weights/best.pt --lr0 5e-4 --train-eval-data configs/data_stage3.yaml
 ```
 
-Each stage's outputs (weights, `results.csv`, `train_map.csv`) land in `experiments/<name>/`.
+</details>
 
 ## Pseudo-label heuristic
 
