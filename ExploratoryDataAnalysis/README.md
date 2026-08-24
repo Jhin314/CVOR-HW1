@@ -40,5 +40,5 @@ at the top of `EDA.py` — edit there if your layout differs.
 
 
 ## Example figures
-![Boxes Per Image Distribution](git_visualizations/boxes_per_image.png)
-![Cooccurrence Matrix](git_visualizations/cooccurrence.png)
+![Boxes Per Image Distribution](../git_visualizations/boxes_per_image.png)
+![Cooccurrence Matrix](../git_visualizations/cooccurrence.png)
