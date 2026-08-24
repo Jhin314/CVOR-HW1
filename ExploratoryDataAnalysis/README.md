@@ -41,5 +41,9 @@ at the top of `EDA.py` — edit there if your layout differs.
 
 
 ## Example figures
+![Class Distribution](../git_visualization/class_distribution.png)
 ![Boxes Per Image Distribution](../git_visualization/boxes_per_image.png)
 ![Cooccurrence Matrix](../git_visualization/cooccurrence.png)
+![Spatial Heatmap](../git_visualization/spatial_heatmap.png)
+![ID-OOD-shift part 1](../git_visualization/id_ood_shift.png)
+![ID-OOD-shift part 2](../git_visualization/rgb_instensity_shift.png)
